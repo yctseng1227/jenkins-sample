@@ -8,14 +8,14 @@ pipeline {
     stages {
         stage('Setup') {
             steps{
-                dir('simple-flask-docker'){
+                dir('simple-flask'){
                     sh 'pwd'
                 }
             }
         }
         stage('Build') {
             steps{
-                dir('simple-flask-docker'){
+                dir('simple-flask'){
                     sh 'pwd'
                     script{
                         dockerImage = docker.build(imagename)
@@ -43,7 +43,7 @@ pipeline {
         /*
         stage('Test') {
             steps{
-                dir('simple-flask-docker'){
+                dir('simple-flask'){
                     sh 'pwd'
                     script{
                         docker.image(dockerImage).withRun(){
