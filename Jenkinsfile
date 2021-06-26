@@ -1,59 +1,47 @@
 pipeline {
     environment {
-        imagename = "registry.macacahub.tw/lab/yctseng-app"
-        registryCredential = 'harbor-credential'
+        REGISTRY_CREDENTIAL = 'harbor-credential'
         dockerImage = ''
     }
+    parameters{
+        string (name: 'DOCKER_REG', defaultValue: 'registry.eevee.tw/lab',  description: 'Docker registry')
+        string (name: 'IMAGE_NAME', defaultValue: 'app/yctseng',  description: 'Image name')
+    }
+
     agent any
     stages {
         stage('Setup') {
             steps{
-                dir('simple-flask'){
-                    sh 'pwd'
-                }
+                sh 'docker version'
             }
         }
         stage('Build') {
             steps{
                 dir('simple-flask'){
-                    sh 'pwd'
                     script{
-                        dockerImage = docker.build(imagename)
+                        ImageName = "${DOCKER_REG}/${IMAGE_NAME}"
+                        dockerImage = docker.build(ImageName)
                     }
-                    
                 }
             }   
         }
-        stage('Deploy Image') {
+        stage('Test') {
+            steps{
+                sh "docker run -it ${IMAGE_NAME} flask test"
+            }   
+        }
+        stage('Deploy') {
             steps{
                 script {
-                    docker.withRegistry( 'https://registry.macacahub.tw/', registryCredential ) {
+                    docker.withRegistry( "https://${DOCKER_REG}/", REGISTRY_CREDENTIAL ) {
                         dockerImage.push("$BUILD_NUMBER")
-                        dockerImage.push('latest')
+                        dockerImage.push("latest")
                     }
                 }
-            }
-        }
-        stage('Remove Unused docker image') {
-            steps{
+                echo "Remove unused images"
                 sh "docker rmi $imagename:$BUILD_NUMBER"
                 sh "docker rmi $imagename:latest"
             }
         }
-        /*
-        stage('Test') {
-            steps{
-                dir('simple-flask'){
-                    sh 'pwd'
-                    script{
-                        docker.image(dockerImage).withRun(){
-                            sh 'docker run -d --rm -p 8888:80'
-                            sh 'curl 127.0.0.1:8888'
-                        }
-                    }
-                }
-            }
-        }
-        */
     }
 }
