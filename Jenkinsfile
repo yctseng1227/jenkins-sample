@@ -33,14 +33,14 @@ pipeline {
         stage('Deploy') {
             steps{
                 script {
-                    docker.withRegistry( "https://${DOCKER_REG}/", REGISTRY_CREDENTIAL ) {
+                    docker.withRegistry( "https://${DOCKER_REG}", REGISTRY_CREDENTIAL ) {
                         //dockerImage.push("$BUILD_NUMBER")
                         dockerImage.push("latest")
                     }
                 }
                 echo "Remove unused images"
                 //sh "docker rmi $imagename:$BUILD_NUMBER"
-                sh "docker rmi ${IMAGE_NAME}:latest"
+                sh "docker rmi ${IMAGE_NAME}"
             }
         }
     }
