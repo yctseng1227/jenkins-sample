@@ -1,6 +1,7 @@
 pipeline {
     environment {
         REGISTRY_CREDENTIAL = 'harbor-credential'
+        dockerImage = ''
     }
     parameters{
         string (name: 'DOCKER_REG', defaultValue: 'registry.eevee.tw/lab',  description: 'Docker registry')
