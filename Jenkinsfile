@@ -27,7 +27,7 @@ pipeline {
         }
         stage('Test') {
             steps{
-                sh "docker run ${IMAGE_NAME} flask test"
+                sh "docker run --rm ${IMAGE_NAME} flask test"
             }   
         }
         stage('Deploy') {
