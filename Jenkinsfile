@@ -1,13 +1,12 @@
 pipeline {
     environment {
         REGISTRY_CREDENTIAL = "harbor-credential"
-        dockerImage = ""
     }
 
     agent any
     stages {
         stage("Setup") {
-            steps{
+            steps {
                 sh "docker version"
                 script {
                     DOCKER_REG = "registry.eevee.tw/lab"
@@ -16,29 +15,29 @@ pipeline {
             }   
         }
         stage("Build Docker Image") {
-            steps{
-                dir("simple-flask"){
-                    script{
-                        ImageName = "${IMAGE_NAME}"
-                        dockerImage = docker.build(ImageName)
+            steps {
+                dir("simple-flask") {
+                    script {
+                        ImageName = "${DOCKER_REG}/${IMAGE_NAME}"
+                        DockerImage = docker.build(ImageName)
                     }
                 }
             }   
         }
-        stage("Test") {
-            steps{
-                sh "docker run --rm ${IMAGE_NAME} flask test"
+        stage("Test Docker Image") {
+            steps {
+                sh "docker run --rm ${DOCKER_REG}/${IMAGE_NAME} flask test"
             }   
         }
         stage("Push Docker Image") {
-            steps{
+            steps {
                 script {
-                    docker.withRegistry( "https://${DOCKER_REG}", REGISTRY_CREDENTIAL ) {
-                        dockerImage.push("latest")
+                    docker.withRegistry("https://${DOCKER_REG}", REGISTRY_CREDENTIAL) {
+                        DockerImage.push("latest")
                     }
                 }
                 echo "Remove unused images"
-                sh "docker rmi ${IMAGE_NAME}"
+                sh "docker rmi ${DOCKER_REG}/${IMAGE_NAME}"
             }
         }
     }
