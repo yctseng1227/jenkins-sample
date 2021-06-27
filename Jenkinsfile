@@ -15,7 +15,7 @@ pipeline {
                 sh 'docker version'
             }
         }
-        stage('Build') {
+        stage('Build Docker Image') {
             steps{
                 dir('simple-flask'){
                     script{
@@ -27,10 +27,10 @@ pipeline {
         }
         stage('Test') {
             steps{
-                sh "docker run --rm ${IMAGE_NAME} flask test"
+                sh "docker run --rm ${DOCKER_REG}/${IMAGE_NAME} flask test"
             }   
         }
-        stage('Deploy') {
+        stage('Push Docker Image') {
             steps{
                 script {
                     docker.withRegistry( "https://${DOCKER_REG}", REGISTRY_CREDENTIAL ) {
