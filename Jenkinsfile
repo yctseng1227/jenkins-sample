@@ -9,9 +9,11 @@ pipeline {
         stage("Setup") {
             steps{
                 sh "docker version"
-            }
-            DOCKER_REG = "registry.eevee.tw/lab"
-            IMAGE_NAME = "app/yctseng"
+                script {
+                    DOCKER_REG = "registry.eevee.tw/lab"
+                    IMAGE_NAME = "app/yctseng"
+                }
+            }   
         }
         stage("Build Docker Image") {
             steps{
