@@ -40,7 +40,7 @@ pipeline {
                 }
                 echo "Remove unused images"
                 //sh "docker rmi $imagename:$BUILD_NUMBER"
-                sh "docker rmi ${IMAGE_NAME}"
+                sh "docker rmi ${DOCKER_REG}/${IMAGE_NAME}"
             }
         }
     }
