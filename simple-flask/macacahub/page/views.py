@@ -5,7 +5,7 @@ blueprint = Blueprint("page", __name__)
 
 @blueprint.route("/")
 def index():
-    return "Hello MacacaHub!! meow~"
+    return "Hello MacacaHub!!"
 
 
 @blueprint.route("/magic")
