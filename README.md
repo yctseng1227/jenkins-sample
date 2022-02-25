@@ -1,6 +1,6 @@
 # jenkins-sample
 
-Sample code of my blog article ["【筆記】Jenkins 🛠 Github  當服務生遇到章魚貓"](https://blog.eevee.tw/2021/38e526c88c47/)
+Sample code of my blog article ["Jenkins 🛠 Github  當服務生遇到章魚貓"](https://blog.eevee.tw/posts/jenkins-with-github-note/)
 
 
 ```
